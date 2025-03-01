@@ -1,0 +1,971 @@
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-color: #BCBCBC;
+  --secondary-color: #8D8D8D;
+  --white-transparent-light: rgba(255, 255, 255, 0.2);
+  --white-transparent-medium: rgba(255, 255, 255, 0.3);
+  --white-transparent-bright: rgba(255, 255, 255, 0.4);
+  --white-transparent-brighter: rgba(255, 255, 255, 0.5);
+  --border-radius: 0px;
+  --transition-speed: 0.3s;
+  --safe-bottom: calc(20px + env(safe-area-inset-bottom));
+  --safe-top: calc(20px + env(safe-area-inset-top));
+  --button-spacing: 4px; /* Consistent spacing throughout the app */
+  --element-height: 60px;
+  --font-size-button: 0.4; /* Standardized font size for all UI elements */
+  --font-size-header: 2.4rem;
+  --element-padding: 15px;
+  --min-button-width: 120px; /* Minimum width for buttons before wrapping */
+  
+  /* Vertical rhythm units based on golden ratio and rule of thirds */
+  --vru-base: 2vh; /* Base vertical rhythm unit */
+  --vru-small: calc(var(--vru-base) * 0.618); /* Golden ratio small unit */
+  --vru-medium: var(--vru-base); /* Standard unit */
+  --vru-large: calc(var(--vru-base) * 1.618); /* Golden ratio large unit */
+  --vru-xlarge: calc(var(--vru-base) * 2.618); /* Golden ratio larger unit */
+}
+
+html {
+  height: 100vh; /* Use viewport height */
+  overflow: hidden; /* Prevent scrolling */
+}
+
+body {
+  font-family: Helvetica, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-weight: bold;
+  background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  overflow: hidden;
+  touch-action: manipulation; /* Optimize for touch to reduce delay */
+}
+
+/* Loading Animation */
+.loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #BCBCBC, #8D8D8D);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease-out;
+  flex-direction: column;
+}
+
+.loading-logo {
+  margin-bottom: 20px;
+}
+
+.loading-progress {
+  width: 200px;
+  height: 4px;
+  background: var(--white-transparent-light);
+  margin-top: 20px;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.loading-bar {
+  height: 100%;
+  width: 0%;
+  background: white;
+  transition: width 0.3s ease;
+}
+
+.loader-text {
+  text-align: center;
+  font-size: calc(var(--element-height) * var(--font-size-button));
+  font-weight: bold;
+  margin-top: 20px;
+  text-transform: uppercase;
+}
+
+/* Hide content until loaded */
+.app-container {
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Toast Notification */
+.toast-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 15px;
+  z-index: 9000;
+  pointer-events: none;
+}
+
+.toast {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 30px;
+  margin-bottom: 10px;
+  max-width: 80%;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Header */
+.header {
+  position: fixed;
+  top: calc(var(--vru-xlarge) * 1.5);
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 10;
+  transition: opacity 0.3s ease;
+  padding: 0;
+  margin: 0;
+  height: auto;
+}
+
+/* Progress Container */
+.progress-container {
+  position: fixed;
+  bottom: calc(var(--element-height) + var(--button-spacing) + env(safe-area-inset-bottom));
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+/* Create bottom whitespace for exercise page */
+#exerciseSection .progress-container {
+  margin-top: var(--vru-large);
+}
+
+/* Hide progress container when landing page is active */
+.landing-active .progress-container {
+  display: none;
+}
+
+.logo {
+  max-width: 180px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Main Container */
+.page {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 700px;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: 0 20px;
+}
+
+.page.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Landing Page */
+#landingPage h1 {
+  font-size: var(--font-size-header);
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+#landingPage p {
+  font-size: 1.2rem;
+  max-width: 500px;
+  margin: 0 auto 2rem auto;
+  opacity: 0.9;
+}
+
+.start-btn {
+  background: var(--white-transparent-light);
+  border: none;
+  font-size: calc(var(--element-height) * var(--font-size-button));
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--transition-speed);
+  height: var(--element-height);
+  line-height: var(--element-height);
+  padding: 0 var(--element-padding);
+  text-transform: uppercase;
+  margin: 0 auto;
+  min-width: 200px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.start-btn:hover {
+  background: var(--white-transparent-bright);
+}
+
+/* Landing page bottom start button */
+.bottom-start-btn {
+  background: var(--white-transparent-light);
+  border: none;
+  font-size: calc(var(--element-height) * var(--font-size-button));
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--transition-speed);
+  height: var(--element-height);
+  line-height: var(--element-height);
+  padding: 0 var(--element-padding);
+  text-transform: uppercase;
+  position: fixed;
+  bottom: env(safe-area-inset-bottom);
+  left: 0;
+  right: 0;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bottom-start-btn:hover {
+  background: var(--white-transparent-bright);
+}
+
+/* Timer Section */
+#timerSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+.focus-time-text {
+  font-size: calc(var(--element-height) * var(--font-size-button));
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.timer-progress-container {
+  width: 100%;
+  height: var(--element-height);
+  background: var(--white-transparent-light);
+  overflow: hidden;
+  cursor: pointer;
+  transition: background var(--transition-speed);
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.timer-progress-container:hover {
+  background: var(--white-transparent-bright);
+}
+
+.timer-progress-bar {
+  height: 100%;
+  background: var(--white-transparent-brighter);
+  width: 100%;
+  transition: width 1s linear;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  will-change: width;
+}
+
+.timer-remaining {
+  position: absolute;
+  font-size: calc(var(--element-height) * 0.4);
+  font-weight: bold;
+  color: white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+/* Exercise Section */
+#exerciseSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 700px;
+  /* 
+   * Use the golden ratio for vertical spacing:
+   * - Logo positioned at top (var(--vru-xlarge) * 1.5)
+   * - Bottom buttons & progress bar have fixed height
+   * - The content area takes remaining space according to golden ratio proportions
+   */
+  height: 100vh;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* Flexible container for exercise content */
+.exercise-content-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  /* 
+   * Position this container at the golden section of the available space
+   * between the logo and the progress bar
+   */
+  margin-top: calc(var(--vru-xlarge) * 3);
+  /* Allow space at the bottom before progress bar */
+  margin-bottom: auto;
+  flex: 1;
+}
+
+.exercise-display {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 3/4; /* Taller than wide (3:4 ratio) */
+  background: var(--white-transparent-light);
+  margin: 0 auto var(--vru-large); /* Use golden ratio spacing below */
+  flex: 0 1 auto;
+  /* Maximum height is proportional to viewport using rule of thirds */
+  max-height: 38vh;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+/* Apply 4:3 ratio when screen is 1:1 or wider */
+@media (min-aspect-ratio: 1/1) {
+  .exercise-display {
+    aspect-ratio: 4/3; /* Wider than tall (4:3 ratio) */
+  }
+}
+
+#exerciseImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.exercise-text-container {
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: var(--vru-xlarge);
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#exerciseTitle {
+  margin-bottom: var(--vru-small);
+  letter-spacing: 1px;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.2;
+}
+
+#exerciseSubtitle {
+  font-size: 1rem;
+  margin-bottom: 0;
+  opacity: 0.9;
+  text-align: center;
+  line-height: 1.4;
+  max-width: 90%;
+}
+
+.exercise-progress-container {
+  width: 100%;
+  height: var(--element-height);
+  background: var(--white-transparent-light);
+  overflow: hidden;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.exercise-progress-bar {
+  height: 100%;
+  background: var(--white-transparent-brighter);
+  width: 100%;
+  transition: width 1s linear;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  will-change: width;
+}
+
+.exercise-remaining {
+  position: absolute;
+  font-size: calc(var(--element-height) * 0.4);
+  font-weight: bold;
+  color: white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+/* Finish Section */
+#finishSection h2 {
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+}
+
+#finishSection p {
+  font-size: 1.2rem;
+  max-width: 500px;
+  margin: 0 auto 2rem auto;
+  opacity: 0.9;
+}
+
+.done-list {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+  margin: 0 auto 2rem auto;
+  max-width: 600px;
+}
+
+.done-list li {
+  background: var(--white-transparent-light);
+  padding: 0 var(--element-padding);
+  margin-bottom: var(--button-spacing);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  height: var(--element-height);
+  line-height: var(--element-height);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.done-list li[data-tag="more"] {
+  background: rgba(115, 215, 170, 0.3);
+}
+
+.done-list li[data-tag="less"] {
+  background: rgba(250, 128, 114, 0.3);
+}
+
+/* Completion Modal */
+.completion-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.completion-modal.visible {
+  opacity: 1;
+}
+
+.modal-content {
+  background: var(--white-transparent-light);
+  padding: 30px;
+  max-width: 90%;
+  width: 350px;
+  text-align: center;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.completion-modal.visible .modal-content {
+  transform: translateY(0);
+}
+
+.modal-content h2 {
+  margin-bottom: 15px;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+}
+
+.modal-content p {
+  margin-bottom: 20px;
+  opacity: 0.9;
+}
+
+.modal-content button {
+  background: var(--white-transparent-medium);
+  border: none;
+  padding: 0 var(--element-padding);
+  color: white;
+  font-weight: bold;
+  font-size: calc(var(--element-height) * var(--font-size-button));
+  width: 100%;
+  height: var(--element-height);
+  line-height: var(--element-height);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  text-transform: uppercase;
+}
+
+.modal-content button:hover {
+  background: var(--white-transparent-bright);
+}
+
+/* Button Container */
+.button-container {
+  position: fixed;
+  bottom: env(safe-area-inset-bottom);
+  left: 0;
+  right: 0;
+  display: flex;
+  z-index: 10;
+  padding: 0;
+  gap: var(--button-spacing);
+}
+
+.bottom-button {
+  background: var(--white-transparent-light);
+  border: none;
+  flex: 1;
+  font-size: calc(var(--element-height) * var(--font-size-button));
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--transition-speed);
+  height: var(--element-height);
+  line-height: var(--element-height);
+  padding: 0 var(--element-padding);
+  text-transform: uppercase;
+  margin: 0;
+  min-width: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bottom-button:hover {
+  background: var(--white-transparent-bright);
+}
+
+/* Knowledge Section */
+#knowledgeSection {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, #BCBCBC, #8D8D8D);
+  z-index: 100;
+  overflow-y: auto;
+  padding: var(--safe-top) 0 calc(70px + env(safe-area-inset-bottom)) 0;
+}
+
+.knowledge-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 0 20px;
+}
+
+.knowledge-header .logo {
+  margin-bottom: 15px;
+}
+
+.knowledge-header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.knowledge-nav {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-bottom: var(--button-spacing);
+  padding: 0;
+  gap: var(--button-spacing);
+}
+
+.knowledge-nav button {
+  background: var(--white-transparent-light);
+  border: none;
+  padding: 0 var(--element-padding);
+  font-size: calc(var(--element-height) * var(--font-size-button));
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--transition-speed);
+  flex: 1 1 calc(33.333% - var(--button-spacing) * 2/3);
+  min-width: 0;
+  margin: 0;
+  height: var(--element-height);
+  line-height: var(--element-height);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 480px) {
+  .knowledge-nav button {
+    flex: 1 1 calc(50% - var(--button-spacing) * 1/2);
+  }
+}
+
+.knowledge-nav button:hover, 
+.knowledge-nav button.active {
+  background: var(--white-transparent-bright);
+}
+
+.knowledge-content {
+  background: var(--white-transparent-light);
+  padding: 20px;
+  margin: 0;
+  width: 100%;
+}
+
+.technique-info {
+  display: none;
+}
+
+.technique-info.active {
+  display: block;
+}
+
+.technique-info h2 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+.technique-info h3 {
+  font-size: 1.3rem;
+  margin: 20px 0 10px;
+  text-transform: uppercase;
+}
+
+.technique-info p, 
+.technique-info ul, 
+.technique-info ol {
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.technique-info ul, 
+.technique-info ol {
+  padding-left: 25px;
+}
+
+.back-button {
+  position: fixed;
+  top: var(--safe-top);
+  left: 0;
+  background: var(--white-transparent-light);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0 var(--element-padding);
+  font-size: calc(var(--element-height) * var(--font-size-button));
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--transition-speed);
+  z-index: 110;
+  height: var(--element-height);
+  line-height: var(--element-height);
+  -webkit-tap-highlight-color: transparent;
+  text-transform: uppercase;
+}
+
+.back-button:hover {
+  background: var(--white-transparent-bright);
+}
+
+/* PWA Install Button */
+#installButton {
+  display: none;
+  background: var(--white-transparent-medium);
+}
+
+#installButton:hover {
+  background: var(--white-transparent-bright);
+}
+
+/* iOS PWA Installation Tip */
+.ios-install-tip {
+  position: fixed;
+  bottom: calc(var(--element-height) * 2 + var(--button-spacing) + env(safe-area-inset-bottom) + 10px);
+  left: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  z-index: 9999;
+  animation: slide-up 0.3s ease;
+}
+  
+.tip-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+  
+.ios-install-tip p {
+  margin: 0;
+  flex: 1;
+}
+  
+.share-icon {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  text-align: center;
+  font-weight: bold;
+  line-height: 18px;
+  border: 1px solid white;
+  border-radius: 4px;
+  margin: 0 3px;
+}
+  
+.close-tip {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 5px;
+}
+  
+@keyframes slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  :root {
+    --element-height: 70px;
+    --font-size-button: 0.4;
+    --font-size-header: 3rem;
+    --element-padding: 18px;
+    --min-button-width: 140px;
+    --vru-base: 2.5vh; /* Slightly larger base unit for bigger screens */
+  }
+  .exercise-display { 
+    max-width: 350px; 
+    max-height: 42vh; /* Adjusted for golden ratio proportions */
+  }
+  .logo { max-width: 240px; }
+  #exerciseTitle { font-size: 2rem; }
+  #exerciseSubtitle { font-size: 1.1rem; }
+  .exercise-content-container {
+    margin-top: calc(var(--vru-xlarge) * 3.5); /* Greater spacing for larger screens */
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --element-height: 50px;
+    --font-size-button: 0.4;
+    --element-padding: 12px;
+    --vru-base: 1.5vh; /* Smaller base unit for mobile */
+  }
+  .exercise-display { 
+    max-width: 250px;
+    max-height: 35vh;
+    min-height: 180px;
+  }
+  #exerciseTitle { font-size: 1.4rem; }
+  #exerciseSubtitle { font-size: 0.9rem; }
+  .exercise-content-container {
+    margin-top: calc(var(--vru-xlarge) * 2.5); /* Less spacing for mobile */
+  }
+}
+
+/* Additional tablet size adjustments */
+@media (min-width: 481px) and (max-width: 767px) {
+  :root {
+    --vru-base: 2vh; /* Middle size base unit for tablets */
+  }
+  .exercise-display {
+    max-width: 280px;
+    max-height: 38vh;
+  }
+  #exerciseTitle { font-size: 1.7rem; }
+  .exercise-content-container {
+    margin-top: calc(var(--vru-xlarge) * 3); /* Middle spacing for tablets */
+  }
+}
+
+/* Height-based adjustments for shorter screens */
+@media (max-height: 600px) {
+  :root {
+    --vru-base: 1.2vh; /* Even smaller units for short screens */
+  }
+  .header {
+    top: calc(var(--vru-xlarge) * 1.2); /* Move logo up slightly */
+  }
+  .exercise-display {
+    min-height: 150px;
+    max-height: 32vh;
+  }
+  #exerciseTitle { font-size: 1.3rem; margin-bottom: var(--vru-small); }
+  #exerciseSubtitle { font-size: 0.85rem; }
+  .exercise-content-container {
+    margin-top: calc(var(--vru-xlarge) * 2); /* Reduced spacing for short screens */
+  }
+}
+
+/* Fallback for browsers that don't support aspect-ratio */
+@supports not (aspect-ratio: 1/1) {
+  .exercise-display {
+    height: 0;
+    padding-bottom: 133.33%; /* 4/3 = 1.3333 */
+    width: 75%; /* Maintain 3:4 aspect ratio */
+  }
+  
+  @media (min-aspect-ratio: 1/1) {
+    .exercise-display {
+      padding-bottom: 75%; /* 3/4 = 0.75 */
+      width: 100%; /* Maintain 4:3 aspect ratio */
+    }
+  }
+}
+
+/* Screen Reader Only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Fix for iPhone PWA in standalone mode */
+@media all and (display-mode: standalone) {
+  html, body {
+    height: 100vh !important;
+    width: 100vw !important;
+    overflow: hidden !important;
+  }
+  
+  .app-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+  }
+  
+  .button-container {
+    bottom: 0 !important;
+    padding-bottom: env(safe-area-inset-bottom) !important;
+  }
+  
+  .progress-container {
+    bottom: calc(var(--element-height) + var(--button-spacing) + env(safe-area-inset-bottom)) !important;
+  }
+}
+/* Hide header when exercise page is active */
+.exercise-active .header {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Make exercise image larger when exercise page is active */
+.exercise-active .exercise-display {
+  max-width: 650px; /* Increased from 300px */
+  max-height: 80vh; /* Increased from 38vh */
+}
+
+/* Adjust the top margin of exercise content container */
+.exercise-active .exercise-content-container {
+  margin-top: var(--vru-large); /* Reduced from calc(var(--vru-xlarge) * 3) */
+}
+
+/* Adjust responsive sizes for larger exercise images */
+@media (min-width: 768px) {
+  .exercise-active .exercise-display { 
+    max-width: 650px; 
+    max-height: 80vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .exercise-active .exercise-display { 
+    max-width: 320px;
+    max-height: 50vh;
+  }
+}
+
+/* Apply to prevent any potential iOS-specific rendering issues */
+@supports (-webkit-touch-callout: none) {
+  body {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+}

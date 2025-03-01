@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Hagius Active Journey - Movement breaks for better workplace health and productivity" />
+  <title>Hagius Active Journey</title>
+  
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#214B7A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Hagius Active Journey">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+
+  <!-- iOS splash screen images -->
+  <link rel="apple-touch-startup-image" href="icons/apple-splash-2048-2732.jpg" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="icons/apple-splash-1668-2388.jpg" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="icons/apple-splash-1536-2048.jpg" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="icons/apple-splash-1125-2436.jpg" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="icons/apple-splash-1242-2688.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="icons/apple-splash-828-1792.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="icons/apple-splash-750-1334.jpg" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="icons/apple-splash-640-1136.jpg" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  
+  <!-- External CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Loading Animation -->
+  <div id="loadingContainer" class="loading-container">
+    <div>
+      <img src="monogram.png" alt="Hagius" class="logo loading-logo">
+      <div class="loader-text">Loading Active Journey...</div>
+      <div class="loading-progress">
+        <div id="loadingBar" class="loading-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- App Container - hidden until loaded -->
+  <div id="appContainer" class="app-container">
+    <!-- Header fixed at the top -->
+    <div class="header">
+      <img src="logo.png" alt="Hagius" class="logo" id="mainLogo">
+    </div>
+    
+    <!-- LANDING PAGE -->
+    <div id="landingPage" class="page active">
+      <h1>Your Active Journey Starts Now</h1>
+      <p>
+        A short break every 45 minutes can transform your day.
+        Move with purpose, and keep your body and mind in balance.
+      </p>
+    </div>
+  
+    <!-- TIMER SECTION (hidden by default) -->
+    <div id="timerSection" class="page">
+      <div class="focus-time-text">FOCUS TIME</div>
+    </div>
+  
+    <!-- EXERCISE SECTION (hidden by default) -->
+    <div id="exerciseSection" class="page">
+      <div class="exercise-content-container">
+        <div class="exercise-display">
+          <img id="exerciseImage" src="" alt="Exercise Image">
+        </div>
+        <div class="exercise-text-container">
+          <h2 id="exerciseTitle">Exercise Name</h2>
+          <p id="exerciseSubtitle">Exercise description</p>
+        </div>
+        <!-- Timer removed from here, only shown in progress bar -->
+      </div>
+    </div>
+  
+    <!-- FINISH SECTION (hidden by default) -->
+    <div id="finishSection" class="page">
+      <h2>Well Done!</h2>
+      <p>
+        You've completed your exercise break.
+        Tap each exercise below to adjust its future frequency.
+      </p>
+      <ul id="doneList" class="done-list"></ul>
+    </div>
+    
+    <!-- Progress Container -->
+    <div class="progress-container" id="progressContainer">
+      <!-- Timer Progress (visible when in timer section) -->
+      <div id="timerProgressContainer" class="timer-progress-container">
+        <div class="timer-progress-bar" id="timerProgress"></div>
+        <div class="timer-remaining" id="timerRemaining">45:00</div>
+      </div>
+      
+      <!-- Exercise Progress (visible when in exercise section) -->
+      <div id="exerciseProgressContainer" class="exercise-progress-container" style="display: none;">
+        <div class="exercise-progress-bar" id="exerciseProgress"></div>
+        <div class="exercise-remaining" id="exerciseRemaining">01:00</div>
+      </div>
+    </div>
+    
+    <!-- Knowledge Section (hidden by default) -->
+    <div id="knowledgeSection" aria-hidden="true">
+      <button class="back-button" id="backButton" aria-label="Back to main app">Back</button>
+      
+      <div class="knowledge-header">
+        <img src="logo.png" alt="Hagius" class="logo">
+        <p>Learn more about the benefits of regular movement breaks</p>
+      </div>
+      
+      <div class="knowledge-nav" role="tablist">
+        <button class="technique-btn active" data-technique="basics" role="tab" aria-selected="true" aria-controls="basics-info">Basics</button>
+        <button class="technique-btn" data-technique="desk" role="tab" aria-selected="false" aria-controls="desk-info">Desk Health</button>
+        <button class="technique-btn" data-technique="productivity" role="tab" aria-selected="false" aria-controls="productivity-info">Productivity</button>
+      </div>
+      
+      <div class="knowledge-content">
+        <!-- Basics Info -->
+        <div id="basics-info" class="technique-info active" role="tabpanel" aria-labelledby="basics-tab">
+          <h2>Movement Break Basics</h2>
+          
+          <p>Regular movement throughout your workday is essential for maintaining physical health, mental clarity, and overall wellbeing. Taking short, deliberate breaks to move your body can prevent many of the negative effects of prolonged sitting.</p>
+          
+          <h3>The Science of Movement</h3>
+          <p>Your body is designed to move regularly. Here's why movement breaks matter:</p>
+          <ul>
+            <li><strong>Circulation</strong> - Regular movement improves blood flow, delivering oxygen and nutrients throughout your body</li>
+            <li><strong>Muscle Activation</strong> - Brief exercises counteract the effects of static postures</li>
+            <li><strong>Joint Mobility</strong> - Movement helps maintain healthy joint function and prevents stiffness</li>
+            <li><strong>Brain Function</strong> - Physical activity increases blood flow to the brain, improving focus and creativity</li>
+          </ul>
+          
+          <h3>The 45-Minute Cycle</h3>
+          <p>Research suggests that working in focused blocks of around 45 minutes, followed by short breaks, optimizes both productivity and wellbeing. This cycle:</p>
+          <ul>
+            <li>Aligns with your body's natural energy rhythms</li>
+            <li>Prevents mental fatigue before it sets in</li>
+            <li>Reduces physical strain from prolonged static positions</li>
+            <li>Improves overall work quality and creative thinking</li>
+          </ul>
+          
+          <h3>Getting Started</h3>
+          <p>For beginners, here are some tips to incorporate movement breaks effectively:</p>
+          <ul>
+            <li>Start with just a few scheduled breaks per day</li>
+            <li>Set calendar reminders or use this app's timer</li>
+            <li>Choose exercises that counter your typical work posture</li>
+            <li>Focus on quality of movement rather than intensity</li>
+            <li>Be consistent - the benefits compound over time</li>
+          </ul>
+        </div>
+        
+        <!-- Desk Health Info -->
+        <div id="desk-info" class="technique-info" role="tabpanel" aria-labelledby="desk-tab">
+          <h2>Desk Health</h2>
+          
+          <p>Extended periods of sitting can lead to numerous health issues, often collectively referred to as "sitting disease." Regular movement breaks are a powerful antidote to these risks.</p>
+          
+          <h3>Common Desk-Related Issues</h3>
+          <ul>
+            <li><strong>Forward Head Posture</strong> - From looking at screens, causing neck strain</li>
+            <li><strong>Rounded Shoulders</strong> - From keyboard use and poor posture</li>
+            <li><strong>Lower Back Pain</strong> - From prolonged sitting and poor ergonomics</li>
+            <li><strong>Hip Tightness</strong> - From seated positions that shorten hip flexors</li>
+            <li><strong>Wrist/Hand Discomfort</strong> - From repetitive typing and mouse use</li>
+          </ul>
+          
+          <h3>Movement as Medicine</h3>
+          <p>Each exercise in your movement break targets specific areas affected by desk work:</p>
+          <ul>
+            <li><strong>Neck Tilts & Rotations</strong> - Release tension from looking at screens</li>
+            <li><strong>Shoulder Rolls</strong> - Combat rounded shoulders and upper back tightness</li>
+            <li><strong>Thoracic Extension</strong> - Counteract the forward slouch of desk work</li>
+            <li><strong>Hip Openers</strong> - Release tight hip flexors from prolonged sitting</li>
+            <li><strong>Balance Exercises</strong> - Reactivate stabilizing muscles that become dormant</li>
+          </ul>
+          
+          <h3>Beyond the Break</h3>
+          <p>Complement your movement breaks with these desk health strategies:</p>
+          <ul>
+            <li>Optimize your workstation ergonomics</li>
+            <li>Alternate between sitting and standing if possible</li>
+            <li>Take brief "micro-breaks" (30 seconds) every 20 minutes</li>
+            <li>Stay well hydrated throughout the day</li>
+            <li>Schedule walking meetings when possible</li>
+          </ul>
+        </div>
+        
+        <!-- Productivity Info -->
+        <div id="productivity-info" class="technique-info" role="tabpanel" aria-labelledby="productivity-tab">
+          <h2>Productivity Benefits</h2>
+          
+          <p>Movement breaks aren't just good for your body - they're proven to enhance cognitive function and work performance. Taking regular breaks can actually help you accomplish more in less time.</p>
+          
+          <h3>The Focus-Recovery Cycle</h3>
+          <p>Your brain works best when it alternates between periods of focused attention and recovery. The 45-minute work cycle with movement breaks optimizes this natural rhythm by:</p>
+          <ul>
+            <li>Preventing decision fatigue and mental exhaustion</li>
+            <li>Creating natural deadlines that increase work intensity</li>
+            <li>Providing psychological closure to work segments</li>
+            <li>Allowing your subconscious to process complex problems</li>
+          </ul>
+          
+          <h3>Cognitive Benefits</h3>
+          <p>Research has documented numerous cognitive improvements from regular movement breaks:</p>
+          <ul>
+            <li><strong>Improved Attention</strong> - Physical activity primes your brain's attention systems</li>
+            <li><strong>Enhanced Memory</strong> - Movement increases blood flow to memory-related brain regions</li>
+            <li><strong>Better Creative Thinking</strong> - Breaks from focused work activate different neural networks</li>
+            <li><strong>Reduced Mental Fatigue</strong> - Movement helps clear mental fog and restore energy</li>
+            <li><strong>Improved Mood</strong> - Physical activity releases mood-enhancing neurochemicals</li>
+          </ul>
+          
+          <h3>Implementation Strategies</h3>
+          <p>Maximize the productivity benefits of your movement breaks with these strategies:</p>
+          <ul>
+            <li>Schedule your most demanding tasks during your peak energy periods</li>
+            <li>Use movement breaks as transitions between different types of work</li>
+            <li>Set a clear intention for each work session before the timer starts</li>
+            <li>Briefly review what you accomplished at the end of each session</li>
+            <li>Consider journaling about insights that arise during movement breaks</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Bottom Button Container -->
+    <div class="button-container" id="buttonContainer">
+      <!-- Landing Page Buttons (new layout) -->
+      <button id="learnMoreButton" class="bottom-button landing-button">Learn More</button>
+      <button id="startButton" class="bottom-button landing-button">Start</button>
+      
+      <!-- Timer Section Buttons (new layout) -->
+      <button id="pauseTimerButton" class="bottom-button timer-button" style="display: none;">Pause</button>
+      <button id="startTimerButton" class="bottom-button timer-button" style="display: none;">Skip</button>
+      
+      <!-- Exercise Section Buttons -->
+      <button id="pauseExerciseButton" class="bottom-button exercise-button" style="display: none;">Pause</button>
+      <button id="skipExerciseButton" class="bottom-button exercise-button" style="display: none;">Skip</button>
+      
+      <!-- Finish Section Buttons -->
+      <button id="restartButton" class="bottom-button finish-button" style="display: none;">Start Next Timer</button>
+    </div>
+  </div>
+  
+  <!-- Audio Cues - Preload for faster response -->
+  <audio id="audioTimer" preload="auto"></audio>
+  <audio id="audioComplete" preload="auto"></audio>
+  <audio id="audioTransition" preload="auto"></audio>
+  
+  <!-- External JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
